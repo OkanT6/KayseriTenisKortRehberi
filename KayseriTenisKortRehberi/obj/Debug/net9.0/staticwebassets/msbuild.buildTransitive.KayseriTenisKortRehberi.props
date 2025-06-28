@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\KayseriTenisKortRehberi.props" />
+</Project>
