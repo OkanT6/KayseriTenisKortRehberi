@@ -366,4 +366,8 @@ FodyWeavers.xsd
 # ASP.NET Core configuration files to ignore sensitive data
 appsettings.json
 appsettings.*.json
-!appsettings.Development.json
+
+
+# App settings files
+KayseriTenisKortRehberi/appsettings.json
+KayseriTenisKortRehberi/appsettings.*.json
