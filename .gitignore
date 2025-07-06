@@ -3,3 +3,8 @@
 /KayseriTenisKortRehberi/appsettings.Development.json
 
 .vs/
+
+
+# Build output folders
+/KayseriTenisKortRehberi/bin
+/KayseriTenisKortRehberi/obj
