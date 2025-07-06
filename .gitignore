@@ -8,3 +8,10 @@
 # Build output folders
 /KayseriTenisKortRehberi/bin
 /KayseriTenisKortRehberi/obj
+
+
+**/obj/
+
+
+**/bin/
+
