@@ -13,4 +13,5 @@
         public string? PhotoUrl { get; set; }
         public IFormFile? PhotoFile { get; set; }
     }
+
 }
