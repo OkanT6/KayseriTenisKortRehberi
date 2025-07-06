@@ -8,6 +8,201 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/KayseriTenisKortRehberi.styles.css" asp-append-version="true" />
+
+    <!-- Admin Panel CSS -->
+    <style>
+        /* Yönetici Paneli Stilleri */
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .admin-panel-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+
+            .admin-panel-header:hover {
+                background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+                transform: translateY(-2px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+
+        .admin-panel-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-panel-arrow {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .admin-panel.open .admin-panel-arrow {
+            transform: rotate(180deg);
+        }
+
+        .admin-panel-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            background: #f8f9fa;
+        }
+
+        .admin-panel.open .admin-panel-content {
+            max-height: 300px;
+            padding: 30px;
+        }
+
+        .admin-panel-inner {
+            text-align: center;
+        }
+
+        .admin-panel-description {
+            color: #666;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .admin-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .admin-btn {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            color: white !important;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 50px;
+        }
+
+            .admin-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+                color: white !important;
+                text-decoration: none;
+            }
+
+            .admin-btn:active {
+                transform: translateY(-1px);
+            }
+
+            .admin-btn.facility-create {
+                background: linear-gradient(45deg, #4caf50, #45a049);
+                color: white !important;
+            }
+
+                .admin-btn.facility-create:hover {
+                    background: linear-gradient(45deg, #45a049, #4caf50);
+                    color: white !important;
+                }
+
+            .admin-btn.facility-update {
+                background: linear-gradient(45deg, #ff9800, #f57c00);
+                color: white !important;
+            }
+
+                .admin-btn.facility-update:hover {
+                    background: linear-gradient(45deg, #f57c00, #ff9800);
+                    color: white !important;
+                }
+
+            .admin-btn.facility-delete {
+                background: linear-gradient(45deg, #f44336, #d32f2f);
+                color: white !important;
+            }
+
+                .admin-btn.facility-delete:hover {
+                    background: linear-gradient(45deg, #d32f2f, #f44336);
+                    color: white !important;
+                }
+
+            .admin-btn.court-create {
+                background: linear-gradient(45deg, #2196f3, #1976d2);
+                color: white !important;
+            }
+
+                .admin-btn.court-create:hover {
+                    background: linear-gradient(45deg, #1976d2, #2196f3);
+                    color: white !important;
+                }
+
+            .admin-btn.court-update {
+                background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+                color: white !important;
+            }
+
+                .admin-btn.court-update:hover {
+                    background: linear-gradient(45deg, #7b1fa2, #9c27b0);
+                    color: white !important;
+                }
+
+            .admin-btn.court-delete {
+                background: linear-gradient(45deg, #e91e63, #ad1457);
+                color: white !important;
+            }
+
+                .admin-btn.court-delete:hover {
+                    background: linear-gradient(45deg, #ad1457, #e91e63);
+                    color: white !important;
+                }
+
+        /* Responsive tasarım */
+        @@media (max-width: 768px) {
+            .admin-buttons
+
+        {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+        }
+
+        .admin-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        }
+
+        @@media (max-width: 480px) {
+            .admin-buttons
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -31,8 +226,50 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
+            <!-- Admin Panel - Sadece belirli sayfalarda göster -->
+            @if (ViewBag.ShowAdminPanel == true)
+            {
+                <!-- Yönetici Paneli -->
+                <div class="admin-panel" id="adminPanel">
+                    <div class="admin-panel-header" onclick="toggleAdminPanel()">
+                        <div class="admin-panel-title">
+                            🔧 Yönetici Paneli
+                        </div>
+                        <div class="admin-panel-arrow">▼</div>
+                    </div>
+                    <div class="admin-panel-content">
+                        <div class="admin-panel-inner">
+                            <div class="admin-panel-description">
+                                Tesis ve kort yönetimi için gerekli tüm işlemler
+                            </div>
+                            <div class="admin-buttons">
+                                <a href="/CreateFacility" class="admin-btn facility-create">
+                                    ➕ Tesis Ekle
+                                </a>
+                                <a href="/UpdateFacility" class="admin-btn facility-update">
+                                    ✏️ Tesis Güncelle
+                                </a>
+                                <a href="/DeleteFacility" class="admin-btn facility-delete">
+                                    🗑️ Tesis Sil
+                                </a>
+                                <a href="/CreateCourt" class="admin-btn court-create">
+                                    🎾 Kort Ekle
+                                </a>
+                                <a href="/UpdateCourt" class="admin-btn court-update">
+                                    🔄 Kort Güncelle
+                                </a>
+                                <a href="/DeleteCourt" class="admin-btn court-delete">
+                                    ❌ Kort Sil
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
             @RenderBody()
         </main>
     </div>
@@ -42,9 +279,22 @@
             &copy; 2025 - KayseriTenisKortRehberi - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+
+    <!-- Admin Panel JavaScript -->
+    <script>
+        // Yönetici paneli açma/kapama fonksiyonu
+        function toggleAdminPanel() {
+            const panel = document.getElementById('adminPanel');
+            if (panel) {
+                panel.classList.toggle('open');
+            }
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

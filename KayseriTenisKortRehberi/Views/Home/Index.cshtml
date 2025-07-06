@@ -1,5 +1,8 @@
 ﻿@model KayseriTenisKortRehberi.Models.ViewModels.MapIndexViewModel
 
+@{
+    ViewBag.ShowAdminPanel = true; // Admin paneli göster
+}
 
 <!DOCTYPE html>
 <html lang="tr">
@@ -46,86 +49,6 @@
                 font-size: 1.1rem;
                 opacity: 0.9;
             }
-
-        .admin-section {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .admin-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .add-facility-btn {
-            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            display: inline-block;
-        }
-
-            .add-facility-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-                background: linear-gradient(45deg, #3a7bd5, #00d2ff);
-            }
-
-            .add-facility-btn:active {
-                transform: translateY(-1px);
-            }
-
-        .add-court-btn {
-            background: linear-gradient(45deg, #4caf50, #45a049);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            display: inline-block;
-        }
-
-            .add-court-btn:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-                background: linear-gradient(45deg, #45a049, #4caf50);
-            }
-
-            .add-court-btn:active {
-                transform: translateY(-1px);
-            }
-
-        .admin-title {
-            color: white;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
-
-        .admin-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1rem;
-            margin-bottom: 15px;
-        }
 
         .maps-grid {
             display: grid;
@@ -279,17 +202,10 @@
 
         /* Responsive tasarım */
         @@media (max-width: 768px) {
-            .admin-buttons
+            .header h1
 
         {
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .add-facility-btn,
-        .add-court-btn {
-            width: 100%;
-            max-width: 300px;
+            font-size: 2rem;
         }
 
         }
@@ -301,22 +217,6 @@
             <h1>@Model.PageTitle</h1>
             <p>@Model.PageDescription</p>
         </div>
-
-        <!-- Yönetici Bölümü (Sadece Yöneticiler İçin) -->
-
-        <div class="admin-section">
-            <h2 class="admin-title">🔧 Yönetici Paneli</h2>
-            <p class="admin-subtitle">Yeni tesis ve kort eklemek, mevcut tesisleri yönetmek için</p>
-            <div class="admin-buttons">
-                <a href="/CreateFacility" class="add-facility-btn">
-                    ➕ Yeni Tesis Ekle
-                </a>
-                <a href="/CreateCourt" class="add-court-btn">
-                    🎾 Yeni Kort Ekle
-                </a>
-            </div>
-        </div>
-
 
         <div class="maps-grid">
             @foreach (var location in Model.Locations)
