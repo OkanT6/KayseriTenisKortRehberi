@@ -1,0 +1,515 @@
+﻿@model KayseriTenisKortRehberi.Models.ViewModels.FacilityViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Yeni Tesis Ekle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .header h1 {
+                color: #333;
+                font-size: 28px;
+                margin-bottom: 10px;
+                font-weight: 600;
+            }
+
+            .header p {
+                color: #666;
+                font-size: 16px;
+            }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #333;
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #667eea;
+                background: white;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .coordinates-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #d1d9e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+            .file-input-button:hover {
+                background: #e9ecef;
+                border-color: #667eea;
+                color: #667eea;
+            }
+
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-radius: 5px;
+            color: #2d5a2d;
+            font-size: 14px;
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+            .submit-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            }
+
+            .submit-btn:active {
+                transform: translateY(0);
+            }
+
+        .auth-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+
+            .auth-section h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            position: relative;
+        }
+
+            .success-message .close-btn {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: none;
+                border: none;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                color: #155724;
+            }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .validation-summary-errors {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+            .validation-summary-errors ul {
+                margin: 0;
+                padding-left: 20px;
+            }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+            .back-btn:hover {
+                background: #5a6268;
+                color: white;
+                text-decoration: none;
+            }
+
+        .map-container {
+            position: relative;
+            height: 300px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-instructions {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="@Url.Action("Index", "Home")" class="back-btn">← Ana Sayfaya Dön</a>
+
+        <div class="header">
+            <h1>🏢 Yeni Tesis Ekle</h1>
+            <p>Admin paneli - Tesis bilgilerini eksiksiz doldurunuz</p>
+        </div>
+
+        @* Success Message - ViewBag ile *@
+        @if (ViewBag.SuccessMessage != null)
+        {
+            <div id="successMessage" class="success-message">
+                <strong>✅ Başarılı!</strong> @ViewBag.SuccessMessage
+                <button type="button" class="close-btn" onclick="closeSuccessMessage()">&times;</button>
+            </div>
+        }
+
+        @* Validation Errors *@
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-summary-errors">
+                <ul>
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        <li>@error.ErrorMessage</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post" action="@Url.Action("Add", "CreateFacility")" enctype="multipart/form-data" id="facilityForm">
+            @Html.AntiForgeryToken()
+
+            <div class="auth-section">
+                <h3>🔐 Kimlik Doğrulama</h3>
+                <div class="form-group">
+                    <label for="ApiKey">API Anahtarı <span class="required">*</span></label>
+                    @Html.TextBoxFor(m => m.ApiKey, new { @type = "password", @class = "form-control", placeholder = "Admin API anahtarınızı giriniz", required = "required" })
+                </div>
+                <div class="form-group">
+                    <label for="UserName">Kullanıcı Adı <span class="required">*</span></label>
+                    @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "Admin kullanıcı adınız", required = "required" })
+                </div>
+                <div class="form-group">
+                    <label for="Password">Şifre <span class="required">*</span></label>
+                    @Html.TextBoxFor(m => m.Password, new { @type = "password", @class = "form-control", placeholder = "Admin şifreniz", required = "required" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="FacilityName">Tesis Adı <span class="required">*</span></label>
+                @Html.TextBoxFor(m => m.FacilityName, new { @class = "form-control", placeholder = "Örn: Merkez Spor Kompleksi", required = "required" })
+            </div>
+
+            <div class="form-group">
+                <label for="FacilityDescription">Tesis Açıklaması <span class="required">*</span></label>
+                @Html.TextAreaFor(m => m.FacilityDescription, new { @class = "form-control", placeholder = "Tesis hakkında detaylı açıklama yazınız...", required = "required" })
+            </div>
+
+            <div class="form-group">
+                <label>Konum Seçimi <span class="required">*</span></label>
+                <div class="map-instructions">
+                    Haritada tesis konumunu seçmek için tıklayın veya mevcut konumunuzu alın
+                </div>
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <div class="coordinates-group">
+                <div class="form-group">
+                    <label for="Latitude">Enlem (Latitude) <span class="required">*</span></label>
+                    @Html.TextBoxFor(m => m.Latitude, new { @type = "number", step = "any", @class = "form-control", placeholder = "38.7225", required = "required" })
+                </div>
+                <div class="form-group">
+                    <label for="Longitude">Boylam (Longitude) <span class="required">*</span></label>
+                    @Html.TextBoxFor(m => m.Longitude, new { @type = "number", step = "any", @class = "form-control", placeholder = "35.4847", required = "required" })
+                </div>
+                <button type="button" id="getCurrentLocation" style="grid-column: 1 / -1; padding: 10px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px;">
+                    📍 Mevcut Konumumu Al
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="PhotoUrl">Fotoğraf URL'si (Opsiyonel)</label>
+                @Html.TextBoxFor(m => m.PhotoUrl, new { @type = "url", @class = "form-control", placeholder = "https://example.com/foto.jpg" })
+                <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                    Veya aşağıdan fotoğraf yükleyebilirsiniz
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Fotoğraf Yükle (Opsiyonel)</label>
+                <div class="file-input-wrapper">
+                    @Html.TextBoxFor(m => m.PhotoFile, new { @type = "file", accept = "image/*", @class = "file-input", id = "photoFile" })
+                    <label for="photoFile" class="file-input-button">
+                        📷 Fotoğraf Seç veya Sürükle
+                    </label>
+                    <div id="filePreview" class="file-preview"></div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                ✨ Tesisi Ekle
+            </button>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+
+    <script>
+        let map;
+        let marker;
+
+        // Harita başlatma
+        function initMap() {
+            // Kayseri koordinatları
+            const kayseriCoords = [38.7225, 35.4847];
+
+            map = L.map('map').setView(kayseriCoords, 11);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Haritaya tıklama olayı
+            map.on('click', function(e) {
+                const lat = e.latlng.lat;
+                const lng = e.latlng.lng;
+
+                // Koordinatları form alanlarına yaz
+                document.getElementById('Latitude').value = lat.toFixed(6);
+                document.getElementById('Longitude').value = lng.toFixed(6);
+
+                // Marker güncelle
+                updateMarker(lat, lng);
+            });
+        }
+
+        // Marker güncelleme
+        function updateMarker(lat, lng) {
+            if (marker) {
+                map.removeLayer(marker);
+            }
+
+            marker = L.marker([lat, lng]).addTo(map);
+            map.setView([lat, lng], 15);
+        }
+
+        // Koordinat alanları değiştiğinde haritayı güncelle
+        function updateMapFromCoordinates() {
+            const lat = parseFloat(document.getElementById('Latitude').value);
+            const lng = parseFloat(document.getElementById('Longitude').value);
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+                updateMarker(lat, lng);
+            }
+        }
+
+        // Sayfa yüklendiğinde haritayı başlat
+        window.onload = function() {
+            initMap();
+
+            // Kayseri koordinatlarını form alanlarına yaz
+            document.getElementById('Latitude').value = '38.722500';
+            document.getElementById('Longitude').value = '35.484700';
+
+            // Kayseri'ye marker ekle
+            updateMarker(38.7225, 35.4847);
+        };
+
+        // Koordinat alanlarına olay dinleyici ekle
+        document.getElementById('Latitude').addEventListener('input', updateMapFromCoordinates);
+        document.getElementById('Longitude').addEventListener('input', updateMapFromCoordinates);
+
+        // Success mesajını kapatma fonksiyonu
+        function closeSuccessMessage() {
+            const successMsg = document.getElementById('successMessage');
+            if (successMsg) {
+                successMsg.style.display = 'none';
+            }
+        }
+
+        // Success mesajını 8 saniye sonra otomatik gizle
+        if (document.getElementById('successMessage')) {
+            setTimeout(function() {
+                closeSuccessMessage();
+            }, 8000);
+        }
+
+        // Dosya seçimi
+        document.getElementById('photoFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('filePreview');
+
+            if (file) {
+                preview.textContent = `Seçilen dosya: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // Konum alma
+        document.getElementById('getCurrentLocation').addEventListener('click', function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+
+                    document.getElementById('Latitude').value = lat.toFixed(6);
+                    document.getElementById('Longitude').value = lng.toFixed(6);
+
+                    updateMarker(lat, lng);
+                    map.setView([lat, lng], 15);
+                });
+            } else {
+                alert('Tarayıcınız konum özelliğini desteklemiyor.');
+            }
+        });
+
+        // Sürükle bırak
+        const fileInputButton = document.querySelector('.file-input-button');
+
+        fileInputButton.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#667eea';
+            this.style.background = '#f0f4ff';
+        });
+
+        fileInputButton.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#d1d9e0';
+            this.style.background = '#f8f9fa';
+        });
+
+        fileInputButton.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#d1d9e0';
+            this.style.background = '#f8f9fa';
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('photoFile').files = files;
+                document.getElementById('photoFile').dispatchEvent(new Event('change'));
+            }
+        });
+    </script>
+</body>
+</html>

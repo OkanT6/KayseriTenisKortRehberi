@@ -1,0 +1,600 @@
+﻿<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Tesis Güncelle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .header h1 {
+                color: #333;
+                font-size: 28px;
+                margin-bottom: 10px;
+                font-weight: 600;
+            }
+
+            .header p {
+                color: #666;
+                font-size: 16px;
+            }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: #333;
+                font-weight: 500;
+                font-size: 14px;
+            }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+            .form-group input:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #28a745;
+                background: white;
+                box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+            }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .coordinates-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .file-input-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #d1d9e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+            .file-input-button:hover,
+            .file-input-button.dragover {
+                background: #e9ecef;
+                border-color: #28a745;
+                color: #28a745;
+            }
+
+        .file-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e8f5e8;
+            border-radius: 5px;
+            color: #2d5a2d;
+            font-size: 14px;
+            display: none;
+        }
+
+        .file-error {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8d7da;
+            border-radius: 5px;
+            color: #721c24;
+            font-size: 14px;
+            display: none;
+        }
+
+        .current-photo {
+            margin-top: 10px;
+            padding: 10px;
+            background: #e3f2fd;
+            border-radius: 5px;
+            color: #1565c0;
+            font-size: 14px;
+        }
+
+            .current-photo img {
+                max-width: 100px;
+                max-height: 100px;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+            .submit-btn:hover:not(:disabled) {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(40, 167, 69, 0.3);
+            }
+
+            .submit-btn:active {
+                transform: translateY(0);
+            }
+
+            .submit-btn:disabled {
+                background: #6c757d;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .auth-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #28a745;
+        }
+
+            .auth-section h3 {
+                color: #333;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+            .back-btn:hover {
+                background: #5a6268;
+                color: white;
+                text-decoration: none;
+            }
+
+        .facility-info {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #28a745;
+        }
+
+            .facility-info h3 {
+                color: #155724;
+                margin-bottom: 15px;
+                font-size: 18px;
+            }
+
+            .facility-info p {
+                color: #155724;
+                margin-bottom: 10px;
+            }
+
+        .loading {
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+            .loading::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 20px;
+                height: 20px;
+                margin: -10px 0 0 -10px;
+                border: 2px solid #28a745;
+                border-top: 2px solid transparent;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+        
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="#" class="back-btn">← Ana Sayfaya Dön</a>
+
+        <div class="header">
+            <h1>✏️ Tesis Güncelle</h1>
+            <p>Admin paneli - Tesis bilgilerini güncelleyiniz</p>
+        </div>
+
+        <!-- Demo veri -->
+        <div class="facility-info">
+            <h3>📋 Mevcut Tesis Bilgileri</h3>
+            <p><strong>ID:</strong> 12345</p>
+            <p><strong>Tesis Adı:</strong> Merkez Spor Kompleksi</p>
+            <p><strong>Açıklama:</strong> Modern tenis kortları ve spor alanları</p>
+            <p><strong>Koordinatlar:</strong> 38.7225, 35.4847</p>
+            <div class="current-photo">
+                <strong>Mevcut Fotoğraf:</strong>
+                <img src="https://via.placeholder.com/150x150/28a745/white?text=Tesis" alt="Mevcut fotoğraf" style="max-width: 150px; max-height: 150px; border-radius: 10px; margin-top: 10px;">
+            </div>
+        </div>
+
+        <div id="messageArea"></div>
+
+        <form id="facilityForm" novalidate>
+            <input type="hidden" name="Id" value="12345">
+
+            <div class="auth-section">
+                <h3>🔐 Kimlik Doğrulama</h3>
+                <div class="form-group">
+                    <label for="ApiKey">API Anahtarı <span class="required">*</span></label>
+                    <input type="password" id="ApiKey" name="ApiKey" placeholder="Admin API anahtarınızı giriniz" required>
+                </div>
+                <div class="form-group">
+                    <label for="UserName">Kullanıcı Adı <span class="required">*</span></label>
+                    <input type="text" id="UserName" name="UserName" placeholder="Admin kullanıcı adınız" required>
+                </div>
+                <div class="form-group">
+                    <label for="Password">Şifre <span class="required">*</span></label>
+                    <input type="password" id="Password" name="Password" placeholder="Admin şifreniz" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="FacilityName">Tesis Adı <span class="required">*</span></label>
+                <input type="text" id="FacilityName" name="FacilityName" value="Merkez Spor Kompleksi" placeholder="Örn: Merkez Spor Kompleksi" required>
+            </div>
+
+            <div class="form-group">
+                <label for="FacilityDescription">Tesis Açıklaması <span class="required">*</span></label>
+                <textarea id="FacilityDescription" name="FacilityDescription" placeholder="Tesis hakkında detaylı açıklama yazınız..." required>Modern tenis kortları ve spor alanları</textarea>
+            </div>
+
+            <div class="coordinates-group">
+                <div class="form-group">
+                    <label for="Latitude">Enlem (Latitude) <span class="required">*</span></label>
+                    <input type="number" step="any" id="Latitude" name="Latitude" value="38.7225" placeholder="38.7225" required>
+                </div>
+                <div class="form-group">
+                    <label for="Longitude">Boylam (Longitude) <span class="required">*</span></label>
+                    <input type="number" step="any" id="Longitude" name="Longitude" value="35.4847" placeholder="35.4847" required>
+                </div>
+                <button type="button" id="getCurrentLocation" style="grid-column: 1 / -1; padding: 10px; background: #28a745; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 10px;">
+                    📍 Mevcut Konumumu Al
+                </button>
+            </div>
+
+            <div class="form-group">
+                <label for="PhotoUrl">Fotoğraf URL'si (Opsiyonel)</label>
+                <input type="url" id="PhotoUrl" name="PhotoUrl" placeholder="https://example.com/foto.jpg">
+                <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                    Veya aşağıdan yeni fotoğraf yükleyebilirsiniz
+                </small>
+            </div>
+
+            <div class="form-group">
+                <label>Yeni Fotoğraf Yükle (Opsiyonel)</label>
+                <div class="file-input-wrapper">
+                    <input type="file" accept="image/*" id="photoFile" name="PhotoFile" class="file-input">
+                    <label for="photoFile" class="file-input-button">
+                        📷 Yeni Fotoğraf Seç veya Sürükle
+                    </label>
+                    <div id="filePreview" class="file-preview"></div>
+                    <div id="fileError" class="file-error"></div>
+                    <div class="current-photo">
+                        Mevcut fotoğraf korunacak (yeni fotoğraf seçmezseniz)
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">
+                ✅ Tesisi Güncelle
+            </button>
+        </form>
+    </div>
+
+    <script>
+        // Dosya boyutu ve tip kontrolü
+        const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+        const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+
+        function validateFile(file) {
+            const errors = [];
+
+            if (file.size > MAX_FILE_SIZE) {
+                errors.push('Dosya boyutu 5MB\'dan büyük olamaz.');
+            }
+
+            if (!ALLOWED_TYPES.includes(file.type)) {
+                errors.push('Sadece JPG, PNG, GIF ve WebP formatları desteklenir.');
+            }
+
+            return errors;
+        }
+
+        function showFileError(message) {
+            const errorDiv = document.getElementById('fileError');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showMessage(message, type = 'success') {
+            const messageArea = document.getElementById('messageArea');
+            messageArea.innerHTML = `<div class="${type === 'success' ? 'success-message' : 'error-message'}">${message}</div>`;
+
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 5000);
+        }
+
+        // Dosya seçimi
+        document.getElementById('photoFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            const preview = document.getElementById('filePreview');
+            const errorDiv = document.getElementById('fileError');
+
+            // Hata mesajını temizle
+            errorDiv.style.display = 'none';
+
+            if (file) {
+                const errors = validateFile(file);
+
+                if (errors.length > 0) {
+                    showFileError(errors.join(' '));
+                    e.target.value = ''; // Dosya seçimini temizle
+                    preview.style.display = 'none';
+                    return;
+                }
+
+                preview.innerHTML = `✅ Seçilen dosya: <strong>${file.name}</strong> (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                preview.style.display = 'block';
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // Gelişmiş konum alma
+        document.getElementById('getCurrentLocation').addEventListener('click', function() {
+            const button = this;
+            const originalText = button.textContent;
+
+            if (!navigator.geolocation) {
+                showMessage('Tarayıcınız konum özelliğini desteklemiyor.', 'error');
+                return;
+            }
+
+            button.textContent = '📍 Konum alınıyor...';
+            button.disabled = true;
+
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 60000
+            };
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    document.getElementById('Latitude').value = position.coords.latitude.toFixed(6);
+                    document.getElementById('Longitude').value = position.coords.longitude.toFixed(6);
+                    showMessage('✅ Konum başarıyla alındı!');
+
+                    button.textContent = originalText;
+                    button.disabled = false;
+                },
+                function(error) {
+                    let errorMessage = 'Konum alınamadı: ';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Konum izni reddedildi.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Konum bilgisi mevcut değil.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Zaman aşımı.';
+                            break;
+                        default:
+                            errorMessage += 'Bilinmeyen hata.';
+                            break;
+                    }
+                    showMessage(errorMessage, 'error');
+
+                    button.textContent = originalText;
+                    button.disabled = false;
+                },
+                options
+            );
+        });
+
+        // Gelişmiş sürükle bırak
+        const fileInputButton = document.querySelector('.file-input-button');
+        const fileInput = document.getElementById('photoFile');
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileInputButton.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileInputButton.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileInputButton.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            fileInputButton.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            fileInputButton.classList.remove('dragover');
+        }
+
+        fileInputButton.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+
+            if (files.length > 0) {
+                const file = files[0];
+
+                // Dosya validasyonu
+                const errors = validateFile(file);
+                if (errors.length > 0) {
+                    showFileError(errors.join(' '));
+                    return;
+                }
+
+                fileInput.files = files;
+
+                // Change event'ini manuel tetikle
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
+            }
+        }
+
+        // Form submit işlemi
+        document.getElementById('facilityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.textContent;
+
+            // Form validation
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e74c3c';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e1e8ed';
+                }
+            });
+
+            if (!isValid) {
+                showMessage('❌ Lütfen tüm zorunlu alanları doldurunuz.', 'error');
+                return;
+            }
+
+            // Loading state
+            submitBtn.textContent = '⏳ Güncelleniyor...';
+            submitBtn.disabled = true;
+            document.body.classList.add('loading');
+
+            // Simulated API call
+            setTimeout(() => {
+                showMessage('✅ Tesis başarıyla güncellendi!');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                document.body.classList.remove('loading');
+            }, 2000);
+        });
+
+        // Sayfa yüklendiğinde input border renklerini sıfırla
+        window.addEventListener('load', function() {
+            document.querySelectorAll('input, textarea').forEach(field => {
+                field.addEventListener('input', function() {
+                    this.style.borderColor = '#e1e8ed';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

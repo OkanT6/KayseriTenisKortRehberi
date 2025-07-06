@@ -1,0 +1,26 @@
+﻿@model KayseriTenisKortRehberi.Models.ViewModels.FacilityDetailsViewModel
+
+@{
+    ViewData["Title"] = "Tesis Detayı";
+}
+
+<h2>Tesis Detayı</h2>
+
+<p><strong>Tesis ID:</strong> @Model.Id</p>
+
+@if (Model.Address is not null)
+{
+    <h3>Adres Bilgisi</h3>
+    <p>@Model.Address.TamAdres</p>
+
+    <ul>
+        <li><strong>İl:</strong> @Model.Address.Il</li>
+        <li><strong>İlçe:</strong> @Model.Address.Ilce</li>
+        <li><strong>Mahalle:</strong> @Model.Address.Mahalle</li>
+        <li><strong>Cadde:</strong> @Model.Address.Cadde</li>
+    </ul>
+}
+else
+{
+    <p>Adres bulunamadı veya servis hatası.</p>
+}
