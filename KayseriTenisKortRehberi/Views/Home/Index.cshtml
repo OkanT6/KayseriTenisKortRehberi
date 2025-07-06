@@ -1,8 +1,432 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model KayseriTenisKortRehberi.Models.ViewModels.MapIndexViewModel
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@Model.PageTitle</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+            .header h1 {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+
+            .header p {
+                font-size: 1.1rem;
+                opacity: 0.9;
+            }
+
+        .admin-section {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .add-facility-btn {
+            background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+            .add-facility-btn:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+                background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            }
+
+            .add-facility-btn:active {
+                transform: translateY(-1px);
+            }
+
+        .admin-title {
+            color: white;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .admin-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .map-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .map-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            }
+
+        .card-header {
+            background: linear-gradient(45deg, #2196f3, #21cbf3);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+            .card-header h3 {
+                font-size: 1.3rem;
+                margin-bottom: 5px;
+            }
+
+            .card-header p {
+                opacity: 0.9;
+                font-size: 0.9rem;
+            }
+
+        .map-container {
+            height: 300px;
+            width: 100%;
+            position: relative;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .zoom-btn {
+            background: linear-gradient(45deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+            .zoom-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .zoom-btn.zoom-in {
+                background: linear-gradient(45deg, #2196f3, #1976d2);
+            }
+
+            .zoom-btn.zoom-out {
+                background: linear-gradient(45deg, #ff9800, #f57c00);
+            }
+
+            .zoom-btn.reset {
+                background: linear-gradient(45deg, #9c27b0, #7b1fa2);
+            }
+
+            .zoom-btn.detail {
+                background: linear-gradient(45deg, #e91e63, #ad1457);
+            }
+
+        .location-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .address {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            max-width: 200px;
+            word-wrap: break-word;
+            text-align: right;
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            padding: 20px;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Responsive tasarım */
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>@Model.PageTitle</h1>
+            <p>@Model.PageDescription</p>
+        </div>
+
+        <!-- Yönetici Bölümü (Sadece Yöneticiler İçin) -->
+        
+            <div class="admin-section">
+                <h2 class="admin-title">🔧 Yönetici Paneli</h2>
+                <p class="admin-subtitle">Yeni tesis eklemek ve mevcut tesisleri yönetmek için</p>
+                <a href="/CreateFacility" class="add-facility-btn">
+                    ➕ Yeni Tesis Ekle
+                </a>
+            </div>
+        
+
+        <div class="maps-grid">
+            @foreach (var location in Model.Locations)
+            {
+                <!-- Harita Kartı: @location.Title -->
+                <div class="map-card">
+                    <div class="card-header">
+                        <h3>@location.IconEmoji @location.Title</h3>
+                        <p>@location.Description</p>
+                    </div>
+                    <div class="map-container" id="@location.Id"></div>
+                    <div class="card-footer">
+                        <div class="location-info">
+                            <span><strong>@location.AdditionalInfoLabel:</strong> @location.AdditionalInfo</span>
+                            <div class="address">@(location.Address?.TamAdres ?? "Adres bilgisi yok")</div>
+                        </div>
+                        <div class="zoom-controls">
+                            <button class="zoom-btn zoom-in" onclick="zoomIn('@location.Id')">
+                                🔍 Yakınlaştır
+                            </button>
+                            <button class="zoom-btn zoom-out" onclick="zoomOut('@location.Id')">
+                                🔍 Uzaklaştır
+                            </button>
+                            <button class="zoom-btn reset" onclick="resetZoom('@location.Id')">
+                                🎯 Sıfırla
+                            </button>
+                            <button class="zoom-btn detail" onclick="showFacilityDetail('@location.Id')">
+                                📋 Tesis Detayı
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- İstatistik Bölümü -->
+        <div class="stats-section">
+            <h2>📊 Harita İstatistikleri</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">@Model.Locations.Count</div>
+                    <div class="stat-label">Toplam Lokasyon</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">@(Model.Locations.Any() ? Model.Locations.Average(x => x.ZoomLevel).ToString("F0") : "0")</div>
+                    <div class="stat-label">Ortalama Zoom</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">Mobil Uyumlu</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">OSM</div>
+                    <div class="stat-label">Harita Sağlayıcı</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Harita lokasyonları Model'den al - JSON.NET ile serialize et
+        var locations = @Html.Raw(Json.Serialize(Model.Locations.Select(l => new
+            {
+                id = l.Id,
+                coords = new[] { l.Latitude, l.Longitude },
+                zoom = l.ZoomLevel,
+                title = l.Title,
+                description = l.Description,
+                address = l.Address?.TamAdres ?? "Adres bilgisi yok"
+            })));
+
+        // Harita örneklerini saklamak için global obje
+        const mapInstances = {};
+
+        // Her konum için harita oluştur
+        locations.forEach(location => {
+            // Harita oluştur
+            const map = L.map(location.id).setView(location.coords, location.zoom);
+
+            // Global objede sakla
+            mapInstances[location.id] = {
+                instance: map,
+                originalZoom: location.zoom,
+                originalCoords: location.coords
+            };
+
+            // OpenStreetMap tile layer ekle
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
+
+            // Özel marker ikonu
+            const customIcon = L.divIcon({
+                html: '<div style="background: #FF4444; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+                iconSize: [20, 20],
+                className: 'custom-marker'
+            });
+
+            // Marker ekle
+            L.marker(location.coords, { icon: customIcon })
+                .addTo(map)
+                .bindPopup(`
+                    <div style="text-align: center; padding: 5px;">
+                        <strong>${location.title}</strong><br>
+                        <small>${location.description}</small><br>
+                        <div style="font-size: 11px; color: #666; margin-top: 5px;">
+                            <strong>📍 Adres:</strong><br>
+                            ${location.address}
+                        </div>
+                    </div>
+                `)
+                .openPopup();
+        });
+
+        // Zoom fonksiyonları
+        function zoomIn(mapId) {
+            const mapData = mapInstances[mapId];
+            if (mapData) {
+                const currentZoom = mapData.instance.getZoom();
+                mapData.instance.setZoom(Math.min(currentZoom + 2, 19));
+            }
+        }
+
+        function zoomOut(mapId) {
+            const mapData = mapInstances[mapId];
+            if (mapData) {
+                const currentZoom = mapData.instance.getZoom();
+                mapData.instance.setZoom(Math.max(currentZoom - 2, 1));
+            }
+        }
+
+        function resetZoom(mapId) {
+            const mapData = mapInstances[mapId];
+            if (mapData) {
+                mapData.instance.setView(mapData.originalCoords, mapData.originalZoom);
+            }
+        }
+
+        // Tesis detayı fonksiyonu - FacilityDetailsController'a yönlendirme
+        function showFacilityDetail(mapId) {
+            // MapId'den integer değerini çıkar (facility_1 -> 1)
+            const facilityId = parseInt(mapId.replace(/\D/g, ''));
+
+            // Debug için console'da göster
+            console.log('MapId:', mapId, 'FacilityId:', facilityId);
+
+            // FacilityDetailsController FacilityDetails action'ına yönlendir
+            const url = '/FacilityDetails/FacilityDetails/' + facilityId;
+            console.log('Redirect URL:', url);
+
+            window.location.href = url;
+        }
+
+        // Harita yüklendikten sonra resize event'i
+        window.addEventListener('resize', () => {
+            Object.keys(mapInstances).forEach(mapId => {
+                const mapData = mapInstances[mapId];
+                if (mapData && mapData.instance) {
+                    setTimeout(() => {
+                        mapData.instance.invalidateSize();
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</ht

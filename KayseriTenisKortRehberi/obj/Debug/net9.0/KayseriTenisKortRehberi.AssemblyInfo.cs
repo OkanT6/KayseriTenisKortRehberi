@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("KayseriTenisKortRehberi")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4911e3554f295e3c783e23e770f3c1b1adc53c9a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b2860ec85a1ad5b37f4bfbb3c2b87ce339500c21")]
 [assembly: System.Reflection.AssemblyProductAttribute("KayseriTenisKortRehberi")]
 [assembly: System.Reflection.AssemblyTitleAttribute("KayseriTenisKortRehberi")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -40,13 +40,13 @@
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\KayseriTenisKortRehberi.lh7s0tixfa.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-F/e6h711vOjrrFTBzscwuWHT3Zl4n4oOdZ5U4Qu5AJ0="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1141"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022F/e6h711vOjrrFTBzscwuWHT3Zl4n4oOdZ5U4Qu5AJ0=\u0022"},{"Name":"Last-Modified","Value":"Sat, 28 Jun 2025 11:12:18 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"1141"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022F/e6h711vOjrrFTBzscwuWHT3Zl4n4oOdZ5U4Qu5AJ0=\u0022"},{"Name":"Last-Modified","Value":"Sun, 06 Jul 2025 10:29:31 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/KayseriTenisKortRehberi/KayseriTenisKortRehberi.lh7s0tixfa.bundle.scp.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\KayseriTenisKortRehberi.lh7s0tixfa.bundle.scp.css'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"lh7s0tixfa"},{"Name":"integrity","Value":"sha256-F/e6h711vOjrrFTBzscwuWHT3Zl4n4oOdZ5U4Qu5AJ0="},{"Name":"label","Value":"_content/KayseriTenisKortRehberi/KayseriTenisKortRehberi.bundle.scp.css"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1141"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022F/e6h711vOjrrFTBzscwuWHT3Zl4n4oOdZ5U4Qu5AJ0=\u0022"},{"Name":"Last-Modified","Value":"Sat, 28 Jun 2025 11:12:18 GMT"}]]]></ResponseHeaders>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"1141"},{"Name":"Content-Type","Value":"text/css"},{"Name":"ETag","Value":"\u0022F/e6h711vOjrrFTBzscwuWHT3Zl4n4oOdZ5U4Qu5AJ0=\u0022"},{"Name":"Last-Modified","Value":"Sun, 06 Jul 2025 10:29:31 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/KayseriTenisKortRehberi/lib/bootstrap/dist/css/bootstrap-grid.bqjiyaj88i.css">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\lib\bootstrap\dist\css\bootstrap-grid.css'))</AssetFile>
