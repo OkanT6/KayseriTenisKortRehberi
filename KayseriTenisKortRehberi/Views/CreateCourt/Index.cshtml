@@ -1,658 +1,721 @@
 ﻿@model List<KayseriTenisKortRehberi.Models.Facility>
+@{
+    ViewData["Title"] = "Yeni Kort Ekle";
+    ViewBag.ShowAdminPanel = true; // Layout'ta admin panelini göster
+}
 
-<!DOCTYPE html>
-<html lang="tr">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yeni Kort Ekle</title>
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
 
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    .page-header {
+        text-align: center;
+        margin-bottom: 30px;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
 
-        body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-
-            .header h1 {
-                font-size: 2.5rem;
-                margin-bottom: 10px;
-                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            }
-
-            .header p {
-                font-size: 1.1rem;
-                opacity: 0.9;
-            }
-
-        .back-button {
-            background: linear-gradient(45deg, #6c757d, #495057);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            text-decoration: none;
-            display: inline-block;
-            margin-bottom: 30px;
-        }
-
-            .back-button:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            }
-
-        /* Alert Stilleri */
-        .alert {
-            padding: 15px 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            position: relative;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            animation: slideIn 0.3s ease;
-        }
-
-        .alert-error {
-            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
-            color: white;
-            border-left: 5px solid #dc3545;
-        }
-
-        .alert-success {
-            background: linear-gradient(45deg, #51cf66, #40c057);
-            color: white;
-            border-left: 5px solid #28a745;
-        }
-
-        .alert-close {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            font-size: 20px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-            .alert-close:hover {
-                opacity: 0.7;
-            }
-
-        @@keyframes slideIn {
-            from
-
-        {
-            opacity: 0;
-            transform: translateY(-20px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        }
-
-        /* Dinamik alert animasyonu */
-        @@keyframes bounceIn {
-            from
-
-        {
-            opacity: 0;
-            transform: scale(0.3) translateY(-100px);
-        }
-
-        50% {
-            opacity: 1;
-            transform: scale(1.05) translateY(0);
-        }
-
-        to {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-        }
-
-        }
-
-        .alert-dynamic {
-            animation: bounceIn 0.6s ease;
-        }
-
-        .form-container {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            margin-bottom: 30px;
-        }
-
-        .form-section {
-            margin-bottom: 25px;
-        }
-
-            .form-section h3 {
-                color: #333;
-                margin-bottom: 15px;
-                font-size: 1.3rem;
-                border-bottom: 2px solid #f0f0f0;
-                padding-bottom: 10px;
-            }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-            .form-group label {
-                display: block;
-                margin-bottom: 5px;
-                font-weight: bold;
-                color: #333;
-            }
-
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                width: 100%;
-                padding: 12px;
-                border: 2px solid #e0e0e0;
-                border-radius: 8px;
-                font-size: 1rem;
-                transition: border-color 0.3s ease;
-            }
-
-                .form-group input:focus,
-                .form-group select:focus,
-                .form-group textarea:focus {
-                    outline: none;
-                    border-color: #4caf50;
-                    box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
-                }
-
-        .facility-dropdown {
-            position: relative;
-        }
-
-        .facility-info {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 10px;
-            display: none;
-        }
-
-            .facility-info.show {
-                display: block;
-                animation: fadeIn 0.3s ease;
-            }
-
-        @@keyframes fadeIn {
-            from
-
-        {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        }
-
-        .info-item {
+        .page-header h1 {
+            font-size: 2.5rem;
             margin-bottom: 10px;
         }
 
-        .info-label {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 5px;
-        }
-
-        .info-value {
-            color: #666;
-            background: white;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #dee2e6;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .submit-btn {
-            background: linear-gradient(45deg, #4caf50, #45a049);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            cursor: pointer;
+        .page-header p {
             font-size: 1.1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            width: 100%;
+            opacity: 0.9;
         }
 
-            .submit-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-            }
+    .back-btn {
+        background: linear-gradient(45deg, #6c757d, #495057);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        display: inline-block;
+        margin-bottom: 20px;
+    }
 
-            .submit-btn:disabled {
-                background: #ccc;
-                cursor: not-allowed;
-                transform: none;
-            }
-
-        .loading {
-            background: linear-gradient(45deg, #ffa726, #ff9800);
-            cursor: wait;
-        }
-
-        .no-facilities {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .create-facility-btn {
-            background: linear-gradient(45deg, #ff9800, #f57c00);
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             text-decoration: none;
-            display: inline-block;
         }
 
-            .create-facility-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            }
+    /* Form Container */
+    .form-container {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
 
-        .required {
-            color: #dc3545;
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
         }
 
-        /* Responsive tasarım */
-        @@media (max-width: 768px) {
-            .form-row
+    .required {
+        color: #e74c3c;
+    }
 
-        {
-            grid-template-columns: 1fr;
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #e1e8ed;
+        border-radius: 10px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        background: #f8f9fa;
+    }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .header h1 {
-            font-size: 2rem;
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .form-container {
-            padding: 20px;
+        .submit-btn:active {
+            transform: translateY(0);
         }
 
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🎾 Yeni Kort Ekle</h1>
-            <p>Seçilen tesise yeni tenis kortu ekleyin</p>
-        </div>
-
-        <a href="/" class="back-button">
-            ← Ana Sayfaya Dön
-        </a>
-
-        <!-- Dinamik Alert Container -->
-        <div id="dynamicAlertContainer"></div>
-
-        <!-- Hata ve Başarı Mesajları (Sunucudan gelecek) -->
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-error">
-                <strong>❌ Hata:</strong> @TempData["ErrorMessage"]
-                <button class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-            </div>
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success">
-                <strong>✅ Başarılı:</strong> @TempData["SuccessMessage"]
-                <button class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-            </div>
+    .loading {
+        background: linear-gradient(45deg, #ffa726, #ff9800);
+        cursor: wait;
+    }
+
+    .auth-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 4px solid #667eea;
+    }
+
+        .auth-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
-        @if (Model != null && Model.Any())
-        {
-            <div class="form-container">
-                <form id="courtForm" method="post" action="/CreateCourt/AddCourt">
-                    <!-- Admin Bilgileri -->
-                    <div class="form-section">
-                        <h3>🔐 Admin Bilgileri</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="ApiKey">API Key <span class="required">*</span></label>
-                                <input type="password" id="ApiKey" name="ApiKey" required placeholder="API anahtarınızı girin">
-                            </div>
-                            <div class="form-group">
-                                <label for="UserName">Admin Kullanıcı Adı <span class="required">*</span></label>
-                                <input type="text" id="UserName" name="UserName" required placeholder="Admin kullanıcı adı">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="Password">Admin Şifre <span class="required">*</span></label>
-                            <input type="password" id="Password" name="Password" required placeholder="Admin şifrenizi girin">
-                        </div>
-                    </div>
+    .facility-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 4px solid #28a745;
+    }
 
-                    <!-- Tesis Seçimi -->
-                    <div class="form-section">
-                        <h3>🏟️ Tesis Seçimi</h3>
-                        <div class="form-group facility-dropdown">
-                            <label for="FacilityId">Tesis Seçin <span class="required">*</span></label>
-                            <select id="FacilityId" name="FacilityId" required onchange="showFacilityInfo()">
-                                <option value="">-- Tesis Seçin --</option>
-                                @foreach (var facility in Model)
-                                {
-                                    <option value="@facility.Id"
-                                            data-name="@facility.Name"
-                                            data-description="@facility.Description"
-                                            data-address="@(facility.Address?.TamAdres ?? "Adres bilgisi yok")"
-                                            data-il="@(facility.Address?.Il ?? "")"
-                                            data-ilce="@(facility.Address?.Ilce ?? "")"
-                                            data-mahalle="@(facility.Address?.Mahalle ?? "")"
-                                            data-cadde="@(facility.Address?.Cadde ?? "")">
-                                        @facility.Name
-                                    </option>
-                                }
-                            </select>
-
-                            <div id="facilityInfo" class="facility-info">
-                                <div class="info-item">
-                                    <div class="info-label">📍 Tesis Adı:</div>
-                                    <div class="info-value" id="facilityName"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">📝 Açıklama:</div>
-                                    <div class="info-value" id="facilityDescription"></div>
-                                </div>
-                                <div class="info-item">
-                                    <div class="info-label">🏠 Tam Adres:</div>
-                                    <div class="info-value" id="facilityAddress"></div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="info-item">
-                                        <div class="info-label">🌍 İl:</div>
-                                        <div class="info-value" id="facilityIl"></div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-label">🏘️ İlçe:</div>
-                                        <div class="info-value" id="facilityIlce"></div>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="info-item">
-                                        <div class="info-label">🏠 Mahalle:</div>
-                                        <div class="info-value" id="facilityMahalle"></div>
-                                    </div>
-                                    <div class="info-item">
-                                        <div class="info-label">🛣️ Cadde:</div>
-                                        <div class="info-value" id="facilityCadde"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kort Bilgileri -->
-                    <div class="form-section">
-                        <h3>🎾 Kort Bilgileri</h3>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="CourtName">Kort Adı <span class="required">*</span></label>
-                                <input type="text" id="CourtName" name="CourtName" required placeholder="Örn: Kort 1, Ana Kort">
-                            </div>
-                            <div class="form-group">
-                                <label for="SurfaceType">Zemin Tipi <span class="required">*</span></label>
-                                <select id="SurfaceType" name="SurfaceType" required>
-                                    <option value="">-- Zemin Tipi Seçin --</option>
-                                    <option value="Kil">Kil</option>
-                                    <option value="Çim">Çim</option>
-                                    <option value="Hard Court">Hard Court</option>
-                                    <option value="Sentetik">Sentetik</option>
-                                    <option value="Beton">Beton</option>
-                                    <option value="Asfalt">Asfalt</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="submit-btn" id="submitBtn" disabled>
-                        🎾 Kortu Ekle
-                    </button>
-                </form>
-            </div>
+        .facility-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
-        else
-        {
-            <div class="no-facilities">
-                <h3>🏟️ Henüz Tesis Bulunmuyor</h3>
-                <p>Kort ekleyebilmek için önce en az bir tesis oluşturmanız gerekiyor.</p>
-                <a href="/CreateFacility" class="create-facility-btn">
-                    ➕ İlk Tesisi Oluştur
-                </a>
-            </div>
+
+    .court-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        border-left: 4px solid #ff6b6b;
+    }
+
+        .court-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
+
+    .facility-info {
+        background: #ffffff;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 15px;
+        margin-top: 10px;
+        display: none;
+    }
+
+        .facility-info.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    .info-item {
+        margin-bottom: 10px;
+    }
+
+    .info-label {
+        font-weight: bold;
+        color: #555;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        color: #666;
+        background: #f8f9fa;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #dee2e6;
+    }
+
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #c3e6cb;
+        position: relative;
+    }
+
+        .success-message .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #155724;
+        }
+
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #f5c6cb;
+    }
+
+    .no-facilities {
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.2);
+    }
+
+        .no-facilities h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .no-facilities p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+    .create-facility-btn {
+        background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        color: white;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        display: inline-block;
+    }
+
+        .create-facility-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    /* Alert Stilleri */
+    .alert {
+        padding: 15px 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        position: relative;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        animation: slideIn 0.3s ease;
+    }
+
+    .alert-error {
+        background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        color: white;
+        border-left: 5px solid #dc3545;
+    }
+
+    .alert-success {
+        background: linear-gradient(45deg, #51cf66, #40c057);
+        color: white;
+        border-left: 5px solid #28a745;
+    }
+
+    .alert-close {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+        .alert-close:hover {
+            opacity: 0.7;
+        }
+
+    @@keyframes slideIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* Dinamik alert animasyonu */
+    @@keyframes bounceIn {
+        from
+
+    {
+        opacity: 0;
+        transform: scale(0.3) translateY(-100px);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05) translateY(0);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+
+    }
+
+    .alert-dynamic {
+        animation: bounceIn 0.6s ease;
+    }
+
+    /* Responsive tasarım */
+    @@media (max-width: 768px) {
+        .form-row
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+    }
+
+    .form-container {
+        padding: 20px;
+    }
+
+    }
+</style>
+
+<div class="page-header">
+    <h1>🎾 Yeni Kort Ekle</h1>
+    <p>Admin paneli - Seçilen tesise yeni tenis kortu ekleyin</p>
+</div>
+
+<a href="@Url.Action("Index", "Home")" class="back-btn">← Ana Sayfaya Dön</a>
+
+<!-- Dinamik Alert Container -->
+<div id="dynamicAlertContainer"></div>
+
+<!-- Hata ve Başarı Mesajları (Sunucudan gelecek) -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-error">
+        <strong>❌ Hata:</strong> @TempData["ErrorMessage"]
+        <button class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
     </div>
+}
 
-    <script>
-        // Dinamik alert gösterme fonksiyonu
-        function showDynamicAlert(message, type = 'success') {
-            const alertContainer = document.getElementById('dynamicAlertContainer');
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        <strong>✅ Başarılı:</strong> @TempData["SuccessMessage"]
+        <button class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+    </div>
+}
 
-            // Mevcut alert varsa kaldır
-            const existingAlert = alertContainer.querySelector('.alert');
-            if (existingAlert) {
-                existingAlert.remove();
-            }
+@if (Model != null && Model.Any())
+{
+    <div class="form-container">
+        <form id="courtForm" method="post" action="/CreateCourt/AddCourt">
+            @Html.AntiForgeryToken()
 
-            // Yeni alert oluştur
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${type} alert-dynamic`;
-            alertDiv.innerHTML = `
-                <strong>${type === 'success' ? '✅ Başarılı:' : '❌ Hata:'}</strong> ${message}
-                <button class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
-            `;
+            <!-- Admin Bilgileri -->
+            <div class="auth-section">
+                <h3>🔐 Kimlik Doğrulama</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ApiKey">API Anahtarı <span class="required">*</span></label>
+                        <input type="password" id="ApiKey" name="ApiKey" required placeholder="Admin API anahtarınızı giriniz">
+                    </div>
+                    <div class="form-group">
+                        <label for="UserName">Kullanıcı Adı <span class="required">*</span></label>
+                        <input type="text" id="UserName" name="UserName" required placeholder="Admin kullanıcı adınız">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="Password">Şifre <span class="required">*</span></label>
+                    <input type="password" id="Password" name="Password" required placeholder="Admin şifreniz">
+                </div>
+            </div>
 
-            alertContainer.appendChild(alertDiv);
+            <!-- Tesis Seçimi -->
+            <div class="facility-section">
+                <h3>🏟️ Tesis Seçimi</h3>
+                <div class="form-group">
+                    <label for="FacilityId">Tesis Seçin <span class="required">*</span></label>
+                    <select id="FacilityId" name="FacilityId" required onchange="showFacilityInfo()">
+                        <option value="">-- Tesis Seçin --</option>
+                        @foreach (var facility in Model)
+                        {
+                            <option value="@facility.Id"
+                                    data-name="@facility.Name"
+                                    data-description="@facility.Description"
+                                    data-address="@(facility.Address?.TamAdres ?? "Adres bilgisi yok")"
+                                    data-il="@(facility.Address?.Il ?? "")"
+                                    data-ilce="@(facility.Address?.Ilce ?? "")"
+                                    data-mahalle="@(facility.Address?.Mahalle ?? "")"
+                                    data-cadde="@(facility.Address?.Cadde ?? "")">
+                                @facility.Name
+                            </option>
+                        }
+                    </select>
 
-            // Alert'i otomatik kapat (5 saniye sonra)
+                    <div id="facilityInfo" class="facility-info">
+                        <div class="info-item">
+                            <div class="info-label">📍 Tesis Adı:</div>
+                            <div class="info-value" id="facilityName"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">📝 Açıklama:</div>
+                            <div class="info-value" id="facilityDescription"></div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">🏠 Tam Adres:</div>
+                            <div class="info-value" id="facilityAddress"></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="info-item">
+                                <div class="info-label">🌍 İl:</div>
+                                <div class="info-value" id="facilityIl"></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">🏘️ İlçe:</div>
+                                <div class="info-value" id="facilityIlce"></div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="info-item">
+                                <div class="info-label">🏠 Mahalle:</div>
+                                <div class="info-value" id="facilityMahalle"></div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">🛣️ Cadde:</div>
+                                <div class="info-value" id="facilityCadde"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kort Bilgileri -->
+            <div class="court-section">
+                <h3>🎾 Kort Bilgileri</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="CourtName">Kort Adı <span class="required">*</span></label>
+                        <input type="text" id="CourtName" name="CourtName" required placeholder="Örn: Kort 1, Ana Kort">
+                    </div>
+                    <div class="form-group">
+                        <label for="SurfaceType">Zemin Tipi <span class="required">*</span></label>
+                        <select id="SurfaceType" name="SurfaceType" required>
+                            <option value="">-- Zemin Tipi Seçin --</option>
+                            <option value="Kil">Kil</option>
+                            <option value="Çim">Çim</option>
+                            <option value="Hard Court">Hard Court</option>
+                            <option value="Sentetik">Sentetik</option>
+                            <option value="Beton">Beton</option>
+                            <option value="Asfalt">Asfalt</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                ✨ Kortu Ekle
+            </button>
+        </form>
+    </div>
+}
+else
+{
+    <div class="no-facilities">
+        <h3>🏟️ Henüz Tesis Bulunmuyor</h3>
+        <p>Kort ekleyebilmek için önce en az bir tesis oluşturmanız gerekiyor.</p>
+        <a href="@Url.Action("Index", "CreateFacility")" class="create-facility-btn">
+            ➕ İlk Tesisi Oluştur
+        </a>
+    </div>
+}
+
+<script>
+    // Dinamik alert gösterme fonksiyonu
+    function showDynamicAlert(message, type = 'success') {
+        const alertContainer = document.getElementById('dynamicAlertContainer');
+
+        // Mevcut alert varsa kaldır
+        const existingAlert = alertContainer.querySelector('.alert');
+        if (existingAlert) {
+            existingAlert.remove();
+        }
+
+        // Yeni alert oluştur
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type} alert-dynamic`;
+        alertDiv.innerHTML = `
+            <strong>${type === 'success' ? '✅ Başarılı:' : '❌ Hata:'}</strong> ${message}
+            <button class="alert-close" onclick="this.parentElement.style.display='none'">×</button>
+        `;
+
+        alertContainer.appendChild(alertDiv);
+
+        // Alert'i otomatik kapat (5 saniye sonra)
+        setTimeout(() => {
+            alertDiv.style.opacity = '0';
             setTimeout(() => {
-                alertDiv.style.opacity = '0';
+                alertDiv.remove();
+            }, 300);
+        }, 5000);
+
+        // Sayfayı yukarı scroll et
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Form submit fonksiyonu
+    document.getElementById('courtForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('submitBtn');
+        const originalText = submitBtn.innerHTML;
+
+        // Buton loading durumuna al
+        submitBtn.innerHTML = '⏳ Kort Ekleniyor...';
+        submitBtn.disabled = true;
+        submitBtn.classList.add('loading');
+
+        try {
+            // Form verilerini al
+            const formData = new FormData(this);
+
+            // AJAX request gönder (X-Requested-With header'ı ekleyelim)
+            const response = await fetch('/CreateCourt/AddCourt', {
+                method: 'POST',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                // Response'u JSON olarak parse et
+                const result = await response.json();
+
+                if (result.success) {
+                    // Başarı durumunda
+                    showDynamicAlert(result.message, 'success');
+
+                    // Formu temizle
+                    this.reset();
+                    document.getElementById('facilityInfo').classList.remove('show');
+                    submitBtn.disabled = true;
+
+                } else {
+                    // Hata durumunda
+                    showDynamicAlert(result.message, 'error');
+                }
+            } else {
+                // HTTP hata durumu
+                try {
+                    const errorResult = await response.json();
+                    showDynamicAlert(errorResult.message || 'Sunucu hatası. Lütfen tekrar deneyin.', 'error');
+                } catch {
+                    showDynamicAlert('Sunucu hatası. Lütfen tekrar deneyin.', 'error');
+                }
+            }
+        } catch (error) {
+            // Network hatası
+            console.error('Hata:', error);
+            showDynamicAlert('Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.', 'error');
+        } finally {
+            // Buton durumunu eski haline getir
+            submitBtn.innerHTML = originalText;
+            submitBtn.classList.remove('loading');
+            checkFormValidity();
+        }
+    });
+
+    function showFacilityInfo() {
+        const select = document.getElementById('FacilityId');
+        const facilityInfo = document.getElementById('facilityInfo');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if (select.value) {
+            const selectedOption = select.options[select.selectedIndex];
+
+            // Tesis bilgilerini göster
+            document.getElementById('facilityName').textContent = selectedOption.dataset.name;
+            document.getElementById('facilityDescription').textContent = selectedOption.dataset.description;
+            document.getElementById('facilityAddress').textContent = selectedOption.dataset.address;
+            document.getElementById('facilityIl').textContent = selectedOption.dataset.il;
+            document.getElementById('facilityIlce').textContent = selectedOption.dataset.ilce;
+            document.getElementById('facilityMahalle').textContent = selectedOption.dataset.mahalle;
+            document.getElementById('facilityCadde').textContent = selectedOption.dataset.cadde;
+
+            // Bilgi panelini göster
+            facilityInfo.classList.add('show');
+
+            // Submit butonunu aktif et
+            checkFormValidity();
+        } else {
+            // Bilgi panelini gizle
+            facilityInfo.classList.remove('show');
+            submitBtn.disabled = true;
+        }
+    }
+
+    function checkFormValidity() {
+        const requiredFields = [
+            'ApiKey', 'UserName', 'Password',
+            'FacilityId', 'CourtName', 'SurfaceType'
+        ];
+
+        let allValid = true;
+
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (!field.value.trim()) {
+                allValid = false;
+            }
+        });
+
+        document.getElementById('submitBtn').disabled = !allValid;
+    }
+
+    // Form alanlarını dinle
+    document.addEventListener('DOMContentLoaded', function() {
+        const requiredFields = ['ApiKey', 'UserName', 'Password', 'CourtName', 'SurfaceType'];
+
+        requiredFields.forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('input', checkFormValidity);
+                field.addEventListener('change', checkFormValidity);
+            }
+        });
+    });
+
+    // Mevcut alert'leri otomatik kapat (5 saniye sonra)
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert:not(.alert-dynamic)');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                alert.style.opacity = '0';
                 setTimeout(() => {
-                    alertDiv.remove();
+                    alert.style.display = 'none';
                 }, 300);
             }, 5000);
-
-            // Sayfayı yukarı scroll et
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // Form submit fonksiyonu
-        document.getElementById('courtForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-
-            // Buton loading durumuna al
-            submitBtn.innerHTML = '⏳ Kort Ekleniyor...';
-            submitBtn.disabled = true;
-            submitBtn.classList.add('loading');
-
-            try {
-                // Form verilerini al
-                const formData = new FormData(this);
-
-                // AJAX request gönder (X-Requested-With header'ı ekleyelim)
-                const response = await fetch('/CreateCourt/AddCourt', {
-                    method: 'POST',
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    },
-                    body: formData
-                });
-
-                if (response.ok) {
-                    // Response'u JSON olarak parse et
-                    const result = await response.json();
-
-                    if (result.success) {
-                        // Başarı durumunda
-                        showDynamicAlert(result.message, 'success');
-
-                        // Formu temizle
-                        this.reset();
-                        document.getElementById('facilityInfo').classList.remove('show');
-                        submitBtn.disabled = true;
-
-                    } else {
-                        // Hata durumunda
-                        showDynamicAlert(result.message, 'error');
-                    }
-                } else {
-                    // HTTP hata durumu
-                    try {
-                        const errorResult = await response.json();
-                        showDynamicAlert(errorResult.message || 'Sunucu hatası. Lütfen tekrar deneyin.', 'error');
-                    } catch {
-                        showDynamicAlert('Sunucu hatası. Lütfen tekrar deneyin.', 'error');
-                    }
-                }
-            } catch (error) {
-                // Network hatası
-                console.error('Hata:', error);
-                showDynamicAlert('Bağlantı hatası. Lütfen internet bağlantınızı kontrol edin.', 'error');
-            } finally {
-                // Buton durumunu eski haline getir
-                submitBtn.innerHTML = originalText;
-                submitBtn.classList.remove('loading');
-                checkFormValidity();
-            }
         });
-
-        function showFacilityInfo() {
-            const select = document.getElementById('FacilityId');
-            const facilityInfo = document.getElementById('facilityInfo');
-            const submitBtn = document.getElementById('submitBtn');
-
-            if (select.value) {
-                const selectedOption = select.options[select.selectedIndex];
-
-                // Tesis bilgilerini göster
-                document.getElementById('facilityName').textContent = selectedOption.dataset.name;
-                document.getElementById('facilityDescription').textContent = selectedOption.dataset.description;
-                document.getElementById('facilityAddress').textContent = selectedOption.dataset.address;
-                document.getElementById('facilityIl').textContent = selectedOption.dataset.il;
-                document.getElementById('facilityIlce').textContent = selectedOption.dataset.ilce;
-                document.getElementById('facilityMahalle').textContent = selectedOption.dataset.mahalle;
-                document.getElementById('facilityCadde').textContent = selectedOption.dataset.cadde;
-
-                // Bilgi panelini göster
-                facilityInfo.classList.add('show');
-
-                // Submit butonunu aktif et
-                checkFormValidity();
-            } else {
-                // Bilgi panelini gizle
-                facilityInfo.classList.remove('show');
-                submitBtn.disabled = true;
-            }
-        }
-
-        function checkFormValidity() {
-            const requiredFields = [
-                'ApiKey', 'UserName', 'Password',
-                'FacilityId', 'CourtName', 'SurfaceType'
-            ];
-
-            let allValid = true;
-
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (!field.value.trim()) {
-                    allValid = false;
-                }
-            });
-
-            document.getElementById('submitBtn').disabled = !allValid;
-        }
-
-        // Form alanlarını dinle
-        document.addEventListener('DOMContentLoaded', function() {
-            const requiredFields = ['ApiKey', 'UserName', 'Password', 'CourtName', 'SurfaceType'];
-
-            requiredFields.forEach(fieldId => {
-                const field = document.getElementById(fieldId);
-                if (field) {
-                    field.addEventListener('input', checkFormValidity);
-                    field.addEventListener('change', checkFormValidity);
-                }
-            });
-        });
-
-        // Mevcut alert'leri otomatik kapat (5 saniye sonra)
-        document.addEventListener('DOMContentLoaded', function() {
-            const alerts = document.querySelectorAll('.alert:not(.alert-dynamic)');
-            alerts.forEach(alert => {
-                setTimeout(() => {
-                    alert.style.opacity = '0';
-                    setTimeout(() => {
-                        alert.style.display = 'none';
-                    }, 300);
-                }, 5000);
-            });
-        });
-    </script>
-</body>
-</html>
+    });
+</script>
